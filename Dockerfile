@@ -5,6 +5,7 @@ COPY rabbitmq-cluster /usr/local/bin/
 COPY pre-entrypoint.sh /
 
 RUN set -xe \
+    && chmod +x /pre-entrypoint.sh \
     && chmod +x /usr/local/bin/rabbitmq-cluster \
     && mkdir /var/log/rabbitmq/
 

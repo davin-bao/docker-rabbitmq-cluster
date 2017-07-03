@@ -24,7 +24,7 @@ RUN set -xe \
     && chmod +x /pre-entrypoint.sh \
     && chmod +x /usr/local/bin/rabbitmq-cluster \
     && mkdir /var/log/rabbitmq \
-    && chown rabbitmq:rabbitmq /var/lib/rabbitmq \
+    && chown rabbitmq:rabbitmq /var/log/rabbitmq \
     && chmod -R 777 /var/log/rabbitmq
 
 EXPOSE 5672 15672 25672 4369 9100 9101 9102 9103 9104 9105

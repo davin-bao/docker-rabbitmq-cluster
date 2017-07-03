@@ -16,6 +16,4 @@ else
 
   rabbitmqctl start_app
 
-  # Tail to keep the a foreground process active..
-  tail -f /var/log/rabbitmq/*
 fi

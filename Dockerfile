@@ -7,6 +7,7 @@ COPY pre-entrypoint.sh /
 RUN set -xe \
     && chmod +x /usr/local/bin/rabbitmq-cluster \
     && chmod +x /pre-entrypoint.sh \
+    && mkdir /var/log/rabbitmq \
     && touch /var/log/rabbitmq/rabbitmq.log
 
 ENTRYPOINT ["/pre-entrypoint.sh"]

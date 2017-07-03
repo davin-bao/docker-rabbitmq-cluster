@@ -1,4 +1,4 @@
-FROM rabbitmq:3.6.9-management-alpine
+FROM rabbitmq:3.6-management-alpine
 MAINTAINER Davin Bao davin.bao@gmail.com
 
 COPY rabbitmq-cluster /usr/local/bin/

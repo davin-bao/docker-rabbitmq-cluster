@@ -1,33 +1,38 @@
-rabbit1:
-  image: harbur/rabbitmq-cluster
-  hostname: rabbit1
-  environment:
-    - ERLANG_COOKIE=abcdefg
-    - RABBITMQ_DEFAULT_PASS=123456
-    - RABBITMQ_DEFAULT_USER=root
-  ports:
-    - "5672:5672"
-    - "15672:15672"
-rabbit2:
-  image: harbur/rabbitmq-cluster
-  hostname: rabbit2
-  links:
-    - rabbit1
-  environment:
-    - ERLANG_COOKIE=abcdefg
-    - CLUSTER_WITH=rabbit1
-    - ENABLE_RAM=true
-  ports:
-    - "5673:5672"
-    - "15673:15672"
-rabbit3:
-  image: harbur/rabbitmq-cluster
-  hostname: rabbit3
-  links:
-    - rabbit1
-    - rabbit2
-  environment:
-    - ERLANG_COOKIE=abcdefg
-    - CLUSTER_WITH=rabbit1
-  ports:
-    - "5674:5672"
+version: '2'
+services:
+  rabbit-node-1:
+    image: rabbitmq:3.6.9-management-alpine
+    hostname: node-1
+    environment:
+      RABBITMQ_DEFAULT_PASS: '123456'
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_ERLANG_COOKIE: abcdef
+      RABBITMQ_NODENAME: rabbit@node-1
+    stdin_open: true
+    volumes:
+    - /xmisp/docker/rabbitmq/conf/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+    tty: true
+    ports:
+    - 15673:15672/tcp
+    command:
+    - bash
+    - -c
+    - rabbitmq-server;
+  rabbit-node-2:
+    image: rabbitmq:3.6.9-management-alpine
+    hostname: node-2
+    environment:
+      RABBITMQ_DEFAULT_PASS: '123456'
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_ERLANG_COOKIE: abcdef
+      RABBITMQ_NODENAME: rabbit@node-2
+    stdin_open: true
+    volumes:
+    - /xmisp/docker/rabbitmq/conf/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+    tty: true
+    links:
+    - rabbit-node-1:node-1
+    command:
+    - bash
+    - -c
+    - sleep 10; rabbitmq-server  -detached;rabbitmqctl stop_app;rabbitmqctl join_cluster rabbit@node-1;rabbitmqctl start_app;rabbitmq-server;touch /var/log/rabbitmq.log;tail -f /var/log/rabbitmq.log;
